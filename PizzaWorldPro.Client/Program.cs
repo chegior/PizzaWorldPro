@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using PizzaWorldPro.Domain.Abstracts;
 using PizzaWorldPro.Domain.Models;
 using PizzaWorldPro.Domain.Singleton;
 
@@ -17,6 +18,7 @@ namespace PizzaWorldPro.Client
         }
         public static void ShowUserMenu()
         {
+            
             Console.Clear();
             Console.WriteLine("+++++++USER VIEW+++++++");
             Console.WriteLine("Please select a Number");
@@ -63,15 +65,30 @@ namespace PizzaWorldPro.Client
         {
             var user = new User();
             var opt = new String("");
-            ShowUserMenu();
-            opt = Console.ReadLine();
-            Console.Clear();
+            while(opt != "3"){
+                ShowUserMenu();
+                opt = Console.ReadLine();
+                Console.Clear();
+            
             switch(opt)
             {
                 case "1": 
                 {
+                    PrintAllStores();
+                    user.SelectedStore = _client.SelectStore();
+                    Console.Clear();
+
                     Console.WriteLine("These are you Orders");
-                    Console.WriteLine(user.ViewUserOrders().Count);
+                    Console.WriteLine(user.SelectedStore.Name);
+                    Console.WriteLine("At the "+user.SelectedStore.Name+"You have :"+user.SelectedStore.Orders.Count+"\n");
+                    System.Console.WriteLine("Each Containing the Folloing Pizzas: ");
+                    user.SelectedStore.Orders.ForEach((o)=>{
+                        for ( var i=0; i < o.Pizzas.Count; i++ )
+                            {
+                                System.Console.WriteLine(o.Pizzas[i].PizzaName);
+                            }
+                        });
+                    
                     Console.ReadKey();
                     Console.WriteLine("Hit any key to go back to the Menu");
                     UserCustomerView();
@@ -105,7 +122,7 @@ namespace PizzaWorldPro.Client
                     break;
                 }
                 default: Console.WriteLine("Please enter a valid selection");UserCustomerView();break;
-                
+                }
             }
 
         }

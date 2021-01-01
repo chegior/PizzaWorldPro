@@ -20,9 +20,14 @@ namespace PizzaWorldPro.Domain.Abstracts
         {
 
             AddToppings();
+            AddName();
             
         }
 
+        protected virtual void AddName()
+        {
+            
+        }
 
         protected virtual void AddToppings()
         {

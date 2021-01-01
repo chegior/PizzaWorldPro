@@ -9,6 +9,10 @@ namespace PizzaWorldPro.Domain.Models{
         {
              PizzaToppings = new List<string>{"Pineapple", "Ham", "Mozarella", "Green Olives"};
         }
-        
+                protected override void AddName()
+        {
+            PizzaName = "Hawaiian Pizza";
+        }
+
     }
 }
