@@ -9,9 +9,10 @@ namespace PizzaWorldPro.Client
     class Program
     {
         private readonly static ClientSingleton _client = ClientSingleton.Instance;
+        
         static void Main(string[] args)
         {
-            Console.Clear();
+            var user = new User();
             MainMenuPizzaWorldPro();
         }
         public static void ShowUserMenu()
@@ -79,13 +80,19 @@ namespace PizzaWorldPro.Client
                 case "2": 
                 {
                     Console.WriteLine("Lets Order you Pizza....\n");
+                    
                     PrintAllStores();
                     user.SelectedStore = _client.SelectStore();
                     System.Console.WriteLine("You have selected THE STORE "+user.SelectedStore.Name.ToUpper());
-                    user.Orders = user.SelectedStore.Orders;
-                    user.OrderPizza();
+                    user.SelectedStore.CreateOrder();
+                    System.Console.WriteLine(user.SelectedStore.Orders.Count);
+                    Console.ReadKey();
+                    user.Orders.Add(user.SelectedStore.Orders.LastOrDefault());
+                    System.Console.WriteLine("+++SELECT A PIZZA+++");
+                    user.Orders.Last().MakeAPizzaSupreme();
+                    user.Orders.Last().MakeAPizzaMeat();
+                    user.Orders.Last().MakeAPizzaVeggie();
                     System.Console.WriteLine("Your Order have "+user.Orders.Last().Pizzas.Count+" Pizzas");
-                    System.Console.WriteLine("The Price of the Order sd: "+user.Orders.Last().CurrentOrderPrice);
                     Console.ReadLine();
                     break;
                 }
@@ -103,7 +110,7 @@ namespace PizzaWorldPro.Client
         public static void UserStoreView()
         {
             
-            var user = new User();
+            
             var opt = new String("");
             ShowStoreMenu();
             opt = Console.ReadLine();
@@ -139,10 +146,12 @@ namespace PizzaWorldPro.Client
         public static void PrintAllStores()
         {
             
-            
+           
+            byte op = 0;
             foreach( var store in _client.Stores)
             {
-                System.Console.WriteLine(store.Name);
+                System.Console.WriteLine(op+"-"+store.Name);
+                op++;
             }
         }
 

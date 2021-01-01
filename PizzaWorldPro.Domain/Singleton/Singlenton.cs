@@ -1,8 +1,7 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
-
-
+using PizzaWorldPro.Domain.Abstracts;
 using PizzaWorldPro.Domain.Models;
 
 namespace PizzaWorldPro.Domain.Singleton
@@ -10,6 +9,7 @@ namespace PizzaWorldPro.Domain.Singleton
     public class ClientSingleton
     {
         public List<Store> Stores {get;set;}
+        public List<APizzaModel> Pizzas { get; set; }
 
         private static ClientSingleton _instance;
 
@@ -27,22 +27,26 @@ namespace PizzaWorldPro.Domain.Singleton
 
         private ClientSingleton()
         {
-           Stores = new List<Store>{
-               new Store("The Xanders Corner"),
-               new Store("Industrial Main")
-           };
+           Read();
         }
 
-        public void MakeAnStore()
+        public void MakeAnStore(Store NewStore)
         {
-            
+            Stores.Add(NewStore);
         }
         public Store SelectStore()
         {
             int.TryParse(Console.ReadLine(), out int input);
             // Console.WriteLine(input.GetType()+"The Value"+Stores.ElementAtOrDefault(input).Name);
-            // Console.ReadLine();
             return Stores.ElementAtOrDefault(input);
+        }
+        private void Read()
+        {
+            Store Xe = new Store();
+            Xe.Name ="Xander Equation";
+            Store Re =new Store();
+            Re.Name = "Rammi Equation";
+            Stores = new List<Store>{Xe,Re};
         }
     }
 }

@@ -17,14 +17,9 @@ namespace PizzaWorldPro.Domain.Models
             Orders.Remove(order);
             return true;
         }   
-        public Store()
-        {   
-            
+        public Store(){
+            Orders = new List<Order>();
         }
-        public Store(string name)
-        {
-            Name = name;
-            Orders = new List<Order>{};
-        }
+        
     }
 }
