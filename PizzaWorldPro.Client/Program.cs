@@ -92,6 +92,8 @@ namespace PizzaWorldPro.Client
                     user.Orders.Last().MakeAPizzaSupreme();
                     user.Orders.Last().MakeAPizzaMeat();
                     user.Orders.Last().MakeAPizzaVeggie();
+                    user.Orders.Last().MakeAPizzaVeggie();
+                    user.Orders.Last().MakeAPizzaVeggie();
                     System.Console.WriteLine("Your Order have "+user.Orders.Last().Pizzas.Count+" Pizzas");
                     Console.ReadLine();
                     break;
