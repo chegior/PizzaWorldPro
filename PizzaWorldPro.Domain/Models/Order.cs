@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using PizzaWorldPro.Domain.Abstracts;
@@ -8,11 +9,13 @@ namespace PizzaWorldPro.Domain.Models
 {
     public class Order
     {
+        public DateTime OrderTime;
         private GenericPizzaFactory _pizzaFactory = new GenericPizzaFactory();
         public List<APizzaModel> Pizzas { get; set; }
         public Order()
         {
             Pizzas = new List<APizzaModel>(){};
+            OrderTime = DateTime.Now;
         }
         public void MakeAPizzaMeat()
         {

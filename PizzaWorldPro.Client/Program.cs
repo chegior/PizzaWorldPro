@@ -43,6 +43,7 @@ namespace PizzaWorldPro.Client
         public static void MainMenuPizzaWorldPro()
         {
             var opt = new String("");
+            Console.Clear();
             Console.WriteLine("Welcome to Pizza World Pro \n\nMENU\n");
             Console.WriteLine("Are you a Customer? Y / N");
             opt = Console.ReadLine();
@@ -85,8 +86,10 @@ namespace PizzaWorldPro.Client
                     user.SelectedStore.Orders.ForEach((o)=>{
                         for ( var i=0; i < o.Pizzas.Count; i++ )
                             {
-                                System.Console.WriteLine(o.Pizzas[i].PizzaName);
+                                
+                                System.Console.WriteLine(o.Pizzas[i].PizzaPrice+" Time: "+ o.OrderTime);
                             }
+                            System.Console.WriteLine("\n\n");
                         });
                     
                     Console.ReadKey();

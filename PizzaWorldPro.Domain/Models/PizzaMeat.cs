@@ -15,6 +15,8 @@ namespace PizzaWorldPro.Domain.Models{
         protected override void AddName()
         {
             PizzaName="MeatPizza";
+            // PizzaPrice = 12.00;
         }
+
     }
 }
