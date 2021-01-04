@@ -1,13 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using PizzaWorld.Domain.Abstracts;
 using PizzaWorldPro.Domain.Abstracts;
 using PizzaWorldPro.Domain.Factories;
 
 
 namespace PizzaWorldPro.Domain.Models
 {
-    public class Order
+    public class Order : AEntity
     {
         public DateTime OrderTime;
         private GenericPizzaFactory _pizzaFactory = new GenericPizzaFactory();

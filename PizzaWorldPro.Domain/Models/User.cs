@@ -1,7 +1,9 @@
 using System.Collections.Generic;
+using PizzaWorld.Domain.Abstracts;
+
 namespace PizzaWorldPro.Domain.Models
 {
-    public class User
+    public class User : AEntity
     {
         public int NameUser { get; set; }
         public bool IsAnEmployee { get; set; }

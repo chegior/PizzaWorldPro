@@ -10,6 +10,7 @@ namespace PizzaWorldPro.Client
     class Program
     {
         private readonly static ClientSingleton _client = ClientSingleton.Instance;
+         private static readonly SqlClient _sql = new SqlClient();
         
         static void Main(string[] args)
         {
@@ -76,20 +77,27 @@ namespace PizzaWorldPro.Client
                 case "1": 
                 {
                     PrintAllStores();
-                    user.SelectedStore = _client.SelectStore();
+                    user.SelectedStore = _sql.SelectStore();
                     Console.Clear();
-
-                    Console.WriteLine("These are you Orders");
-                    Console.WriteLine(user.SelectedStore.Name);
-                    Console.WriteLine("At the "+user.SelectedStore.Name+"You have :"+user.SelectedStore.Orders.Count+"\n");
-                    System.Console.WriteLine("Each Containing the Folloing Pizzas: ");
+                    Console.Clear();
+                    Console.Write("These are you Orders at the Store: ");
+                    Console.WriteLine(user.SelectedStore.Name.ToUpper());
+                    Console.WriteLine("As of now, You have "+user.SelectedStore.Orders.Count+" Order(s) of Pizzas");
+                    System.Console.WriteLine("Each Containing Pizzas as follow: \n");
                     user.SelectedStore.Orders.ForEach((o)=>{
+                        System.Console.WriteLine("+++++++++++++RECEIPT FOR ORDER +++++++++++++");
+                        double totalOrder = 0;
                         for ( var i=0; i < o.Pizzas.Count; i++ )
                             {
                                 
-                                System.Console.WriteLine(o.Pizzas[i].PizzaPrice+" Time: "+ o.OrderTime);
+                                System.Console.Write(o.Pizzas[i].PizzaName+" Order at : "+ o.OrderTime);
+                                System.Console.WriteLine("having "+o.Pizzas[i].PizzaToppings.Count+" Toppings as follow: ");
+                                totalOrder+=o.Pizzas[i].PizzaPrice += GetToppingsInfo(o.Pizzas[i]);
+                                System.Console.WriteLine("Your Total Pizza Price is :"+o.Pizzas[i].PizzaPrice.ToString("c")+"\n");
+                               
                             }
-                            System.Console.WriteLine("\n\n");
+                            System.Console.WriteLine("TOTAL: "+ totalOrder.ToString("c"));
+                            System.Console.WriteLine("\n");
                         });
                     
                     Console.ReadKey();
@@ -99,21 +107,33 @@ namespace PizzaWorldPro.Client
                 }
                 case "2": 
                 {
-                    Console.WriteLine("Lets Order you Pizza....\n");
+                    Console.WriteLine("Lets Order you Pizza....\n Note: Type the Name of the Pizzeria");
                     
                     PrintAllStores();
-                    user.SelectedStore = _client.SelectStore();
+                    user.SelectedStore = _sql.SelectStore();
                     System.Console.WriteLine("You have selected THE STORE "+user.SelectedStore.Name.ToUpper());
                     user.SelectedStore.CreateOrder();
                     System.Console.WriteLine(user.SelectedStore.Orders.Count);
                     Console.ReadKey();
                     user.Orders.Add(user.SelectedStore.Orders.LastOrDefault());
                     System.Console.WriteLine("+++SELECT A PIZZA+++");
-                    user.Orders.Last().MakeAPizzaSupreme();
-                    user.Orders.Last().MakeAPizzaMeat();
-                    user.Orders.Last().MakeAPizzaVeggie();
-                    user.Orders.Last().MakeAPizzaVeggie();
-                    user.Orders.Last().MakeAPizzaVeggie();
+
+                     
+                    var optPizza ="";
+                    do{
+                        SelctAPizza(user.SelectedStore.Name);
+                        optPizza = System.Console.ReadLine();
+                        switch (optPizza)
+                        {
+                            case "1": user.Orders.Last().MakeAPizzaaHawaiian();AssemblePizzaHawaiian(user.Orders.Last().Pizzas.Last());break;
+                            case "2": user.Orders.Last().MakeAPizzaMeat(); AssemblePizzaMeat(user.Orders.Last().Pizzas.Last());break;
+                            case "3":user.Orders.Last().MakeAPizzaSupreme();AssembleSupreme(user.Orders.Last().Pizzas.Last());break;
+                            case "4":user.Orders.Last().MakeAPizzaVeggie();AssemblePizzaVeggie(user.Orders.Last().Pizzas.Last());break;
+                            default: Console.WriteLine("Thank you!...hit a Key to continue "); Console.ReadKey();break;
+                        }
+                    }while(optPizza!="0");
+
+                   
                     System.Console.WriteLine("Your Order have "+user.Orders.Last().Pizzas.Count+" Pizzas");
                     Console.ReadLine();
                     break;
@@ -129,6 +149,19 @@ namespace PizzaWorldPro.Client
             }
 
         }
+
+        private static double GetToppingsInfo(APizzaModel Pizza)
+        {
+            double ToppingsPrice = 0;
+            Pizza.PizzaToppings.ForEach(t => {
+                System.Console.WriteLine("\t"+t.ItemName+" this item its price is "+t.ItemPrice.ToString("c"));
+                ToppingsPrice += t.ItemPrice;
+                }
+            );
+            return ToppingsPrice;
+           
+        }
+
         public static void UserStoreView()
         {
             
@@ -167,17 +200,65 @@ namespace PizzaWorldPro.Client
 
         public static void PrintAllStores()
         {
-            
-           
-            byte op = 0;
-            foreach( var store in _client.Stores)
+            byte opt = 1;
+            foreach (var store in _sql.ReadStores())
             {
-                System.Console.WriteLine(op+"-"+store.Name);
-                op++;
+                System.Console.WriteLine(opt+".- "+store.Name);
+                opt++;
             }
         }
 
-        
-        
+        public static void SelctAPizza(string Name )
+        {
+            Console.Clear();
+            System.Console.WriteLine("++++++Order YOUR Pizza+++++\n",Name);
+            System.Console.WriteLine("As of now at {0} this is our Selection...Bon Appetii...",Name);
+            System.Console.WriteLine("1 Hawaiian Pizza");
+            System.Console.WriteLine("2 Meat Pizza");
+            System.Console.WriteLine("3 Pizza Supreme");
+            System.Console.WriteLine("4 Veggie Pizza");
+            System.Console.WriteLine("0 I dont want a Pizza or more Pizzas\n");
+            System.Console.WriteLine("---------------------------------------");
+            System.Console.Write("Type the Number of your Selection: ");
+        }
+
+       
+
+        private static APizzaModel AssemblePizzaVeggie(APizzaModel Pizza)
+        {
+            Pizza.PizzaToppings.Add(_sql.getToppings("Basil"));
+            Pizza.PizzaToppings.Add(_sql.getToppings("Baby Spinach"));
+            Pizza.PizzaToppings.Add(_sql.getToppings("Black Olives"));
+            Pizza.PizzaToppings.Add(_sql.getToppings("Cheese-feta"));
+            return Pizza;
+        }
+
+        private static APizzaModel AssembleSupreme(APizzaModel Pizza)
+        {
+            Pizza.PizzaToppings.Add(_sql.getToppings("Bacon"));
+            Pizza.PizzaToppings.Add(_sql.getToppings("Green Peppers"));
+            Pizza.PizzaToppings.Add(_sql.getToppings("Mozarella"));
+            Pizza.PizzaToppings.Add(_sql.getToppings("Onions"));
+            return Pizza;
+
+        }
+
+        private static APizzaModel AssemblePizzaMeat(APizzaModel Pizza)
+        {
+            Pizza.PizzaToppings.Add(_sql.getToppings("Tomatoes"));
+            Pizza.PizzaToppings.Add(_sql.getToppings("Pepperoni"));
+            Pizza.PizzaToppings.Add(_sql.getToppings("Mushrooms"));
+            Pizza.PizzaToppings.Add(_sql.getToppings("Onions"));
+            return Pizza;
+        }
+
+        private static APizzaModel AssemblePizzaHawaiian(APizzaModel Pizza)
+        {
+            Pizza.PizzaToppings.Add(_sql.getToppings("Pineapple"));
+            Pizza.PizzaToppings.Add(_sql.getToppings("Ham"));
+            Pizza.PizzaToppings.Add(_sql.getToppings("Mozarella"));
+            Pizza.PizzaToppings.Add(_sql.getToppings("Green Olives"));
+            return Pizza;
+        }
     }
 }

@@ -7,11 +7,15 @@ namespace PizzaWorldPro.Domain.Models{
     {
         protected override void AddToppings()
         {
-            PizzaToppings = new List<string>{"Bacon", "Onions", "Green Peppers", "Mozarella"};          
+           PizzaToppings = new List<Toppings>{};         
         }
         protected override void AddName()
         {
             PizzaName = "Supreme Pizza";
+        }
+        protected override void AddPizzaPrice()
+        {
+             PizzaPrice = 20.00;
         }
 
         

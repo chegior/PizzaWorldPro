@@ -42,11 +42,7 @@ namespace PizzaWorldPro.Domain.Singleton
         }
         private void Read()
         {
-            Store Xe = new Store();
-            Xe.Name ="Xander Equation";
-            Store Re =new Store();
-            Re.Name = "Rammi Equation";
-            Stores = new List<Store>{Xe,Re};
+            
         }
     }
 }

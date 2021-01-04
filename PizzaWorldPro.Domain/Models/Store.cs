@@ -1,8 +1,9 @@
 using System.Collections.Generic;
+using PizzaWorld.Domain.Abstracts;
 
 namespace PizzaWorldPro.Domain.Models
 {
-    public class Store
+    public class Store : AEntity
     {
         public string Name {get;set;}
         public List<Order> Orders { get; set; }
