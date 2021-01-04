@@ -12,7 +12,7 @@
             "program": "${workspaceFolder}/PizzaWorldPro.Client/bin/Debug/net5.0/PizzaWorldPro.Client.dll",
             "args": [],
             "cwd": "${workspaceFolder}/PizzaWorldPro.Client",
-            "console": "internalConsole",
+            "console": "integratedTerminal",
             "stopAtEntry": false
         },
         {
