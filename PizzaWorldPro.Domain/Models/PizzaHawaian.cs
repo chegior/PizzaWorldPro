@@ -15,7 +15,7 @@ namespace PizzaWorldPro.Domain.Models{
         }
         protected override void AddPizzaPrice()
         {
-            PizzaPrice = 13.00;
+            PizzaPrice = 10.00;
         }
 
     }

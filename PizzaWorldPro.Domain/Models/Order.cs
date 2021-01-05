@@ -10,7 +10,9 @@ namespace PizzaWorldPro.Domain.Models
 {
     public class Order : AEntity
     {
-        public DateTime OrderTime;
+        public DateTime OrderTime {get; set;}
+        public double OrderPrice { get; set; }
+        
         private GenericPizzaFactory _pizzaFactory = new GenericPizzaFactory();
         public List<APizzaModel> Pizzas { get; set; }
         public Order()

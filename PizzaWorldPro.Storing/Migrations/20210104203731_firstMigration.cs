@@ -1,8 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace PizzaWorldPro.Storing.Migrations
 {
-    public partial class firstMigrationTest : Migration
+    public partial class firstMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -84,6 +85,8 @@ namespace PizzaWorldPro.Storing.Migrations
                 {
                     EntityId = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    OrderTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    OrderPrice = table.Column<double>(type: "float", nullable: false),
                     StoreEntityId = table.Column<long>(type: "bigint", nullable: true),
                     UserEntityId = table.Column<long>(type: "bigint", nullable: true)
                 },

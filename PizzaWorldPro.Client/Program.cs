@@ -14,7 +14,7 @@ namespace PizzaWorldPro.Client
         
         static void Main(string[] args)
         {
-            var user = new User();
+           // var user = new User();
             MainMenuPizzaWorldPro();
         }
         public static void ShowUserMenu()
@@ -91,10 +91,9 @@ namespace PizzaWorldPro.Client
                             {
                                 
                                 System.Console.Write(o.Pizzas[i].PizzaName+" Order at : "+ o.OrderTime);
-                                System.Console.WriteLine("having "+o.Pizzas[i].PizzaToppings.Count+" Toppings as follow: ");
+                                System.Console.WriteLine(" having "+o.Pizzas[i].PizzaToppings.Count+" Toppings as follow: ");
                                 totalOrder+=o.Pizzas[i].PizzaPrice += GetToppingsInfo(o.Pizzas[i]);
                                 System.Console.WriteLine("Your Total Pizza Price is :"+o.Pizzas[i].PizzaPrice.ToString("c")+"\n");
-                               
                             }
                             System.Console.WriteLine("TOTAL: "+ totalOrder.ToString("c"));
                             System.Console.WriteLine("\n");
@@ -107,28 +106,63 @@ namespace PizzaWorldPro.Client
                 }
                 case "2": 
                 {
-                    Console.WriteLine("Lets Order you Pizza....\n Note: Type the Name of the Pizzeria");
+                    Console.WriteLine("Lets Order you Pizza....\n Note: Loading our fine Pizzerias Negozios!");
                     
                     PrintAllStores();
+                    Console.Write("Please choose from above: ");
                     user.SelectedStore = _sql.SelectStore();
-                    System.Console.WriteLine("You have selected THE STORE "+user.SelectedStore.Name.ToUpper());
                     user.SelectedStore.CreateOrder();
-                    System.Console.WriteLine(user.SelectedStore.Orders.Count);
-                    Console.ReadKey();
                     user.Orders.Add(user.SelectedStore.Orders.LastOrDefault());
-                    System.Console.WriteLine("+++SELECT A PIZZA+++");
+                    Console.WriteLine("You have selected THE STORE "+user.SelectedStore.Name.ToUpper());
+                    Console.WriteLine("+++SELECT A PIZZA+++");
 
                      
                     var optPizza ="";
                     do{
-                        SelctAPizza(user.SelectedStore.Name);
+                        SelectAPizza(user.SelectedStore.Name);
                         optPizza = System.Console.ReadLine();
                         switch (optPizza)
                         {
-                            case "1": user.Orders.Last().MakeAPizzaaHawaiian();AssemblePizzaHawaiian(user.Orders.Last().Pizzas.Last());break;
-                            case "2": user.Orders.Last().MakeAPizzaMeat(); AssemblePizzaMeat(user.Orders.Last().Pizzas.Last());break;
-                            case "3":user.Orders.Last().MakeAPizzaSupreme();AssembleSupreme(user.Orders.Last().Pizzas.Last());break;
-                            case "4":user.Orders.Last().MakeAPizzaVeggie();AssemblePizzaVeggie(user.Orders.Last().Pizzas.Last());break;
+                            case "1":
+                            { 
+                                user.Orders.Last().MakeAPizzaaHawaiian();
+                                AssemblePizzaHawaiian(user.Orders.Last().Pizzas.Last()); 
+                                ChooseACrust(user.Orders.Last().Pizzas.Last());
+                                ChooseASize(user.Orders.Last().Pizzas.Last()); 
+                                user.Orders.Last().OrderPrice = user.Orders.Last().Pizzas.Last().PizzaPrice;
+                                _sql.Update();
+                                break;
+                            }
+                            case "2": 
+                            {
+                                user.Orders.Last().MakeAPizzaMeat(); 
+                                AssemblePizzaMeat(user.Orders.Last().Pizzas.Last());
+                                ChooseACrust(user.Orders.Last().Pizzas.Last());
+                                ChooseASize(user.Orders.Last().Pizzas.Last()); 
+                                user.Orders.Last().OrderPrice = user.Orders.Last().Pizzas.Last().PizzaPrice;
+                                _sql.Update();
+                                break;
+                            }
+                            case "3":
+                            {
+                                user.Orders.Last().MakeAPizzaSupreme();
+                                AssembleSupreme(user.Orders.Last().Pizzas.Last());
+                                ChooseACrust(user.Orders.Last().Pizzas.Last());
+                                ChooseASize(user.Orders.Last().Pizzas.Last()); 
+                                user.Orders.Last().OrderPrice = user.Orders.Last().Pizzas.Last().PizzaPrice;
+                                _sql.Update();
+                                break;
+                            }
+                            case "4":
+                            {
+                                user.Orders.Last().MakeAPizzaVeggie();
+                                AssemblePizzaVeggie(user.Orders.Last().Pizzas.Last());
+                                ChooseACrust(user.Orders.Last().Pizzas.Last());
+                                ChooseASize(user.Orders.Last().Pizzas.Last()); 
+                                user.Orders.Last().OrderPrice = user.Orders.Last().Pizzas.Last().PizzaPrice;
+                                _sql.Update();
+                                break;
+                            }
                             default: Console.WriteLine("Thank you!...hit a Key to continue "); Console.ReadKey();break;
                         }
                     }while(optPizza!="0");
@@ -164,7 +198,7 @@ namespace PizzaWorldPro.Client
 
         public static void UserStoreView()
         {
-            
+            var store = new Store();
             
             var opt = new String("");
             ShowStoreMenu();
@@ -175,14 +209,15 @@ namespace PizzaWorldPro.Client
             {
                 case "1": 
                 {
-                    Console.Clear();Console.WriteLine("These are you Orders");
-                    //
+                    Console.Clear();Console.WriteLine("These are the Store Orders");
+                    PrintAllStores();
+                    store = _sql.SelectStore();
+                    GetOrdersFromStore(store);
                     break;
                 }
                 case "2": 
                 {
                     Console.Clear();Console.WriteLine("Proxy\n");
-                    
                     break;
                 }
                 case "3": 
@@ -198,6 +233,21 @@ namespace PizzaWorldPro.Client
 
         }
 
+        private static void GetOrdersFromStore(Store s)
+        {
+            double TotalSales = 0;
+           s.Orders = _sql.getOrdersByStore(s.Name);
+           System.Console.WriteLine("The store {0} have a total of {1}",s.Name,s.Orders.Count);
+           s.Orders.ForEach( (o) => 
+           {
+               TotalSales += o.OrderPrice; 
+               System.Console.WriteLine("Order Price: {0}",o.OrderPrice.ToString("c"));
+            });
+            Console.WriteLine("The Store {0} TOTAL: {1}",s.Name,TotalSales.ToString("c"));
+            Console.Write("Press a Key to Continue.....");
+            Console.ReadKey();
+        }
+
         public static void PrintAllStores()
         {
             byte opt = 1;
@@ -208,7 +258,7 @@ namespace PizzaWorldPro.Client
             }
         }
 
-        public static void SelctAPizza(string Name )
+        public static void SelectAPizza(string Name )
         {
             Console.Clear();
             System.Console.WriteLine("++++++Order YOUR Pizza+++++\n",Name);
@@ -224,41 +274,98 @@ namespace PizzaWorldPro.Client
 
        
 
-        private static APizzaModel AssemblePizzaVeggie(APizzaModel Pizza)
+        private static void AssemblePizzaVeggie(APizzaModel Pizza)
         {
             Pizza.PizzaToppings.Add(_sql.getToppings("Basil"));
             Pizza.PizzaToppings.Add(_sql.getToppings("Baby Spinach"));
             Pizza.PizzaToppings.Add(_sql.getToppings("Black Olives"));
             Pizza.PizzaToppings.Add(_sql.getToppings("Cheese-feta"));
-            return Pizza;
+            
         }
 
-        private static APizzaModel AssembleSupreme(APizzaModel Pizza)
+        private static void AssembleSupreme(APizzaModel Pizza)
         {
             Pizza.PizzaToppings.Add(_sql.getToppings("Bacon"));
             Pizza.PizzaToppings.Add(_sql.getToppings("Green Peppers"));
             Pizza.PizzaToppings.Add(_sql.getToppings("Mozarella"));
             Pizza.PizzaToppings.Add(_sql.getToppings("Onions"));
-            return Pizza;
+            
 
         }
 
-        private static APizzaModel AssemblePizzaMeat(APizzaModel Pizza)
+        private static void AssemblePizzaMeat(APizzaModel Pizza)
         {
             Pizza.PizzaToppings.Add(_sql.getToppings("Tomatoes"));
             Pizza.PizzaToppings.Add(_sql.getToppings("Pepperoni"));
             Pizza.PizzaToppings.Add(_sql.getToppings("Mushrooms"));
             Pizza.PizzaToppings.Add(_sql.getToppings("Onions"));
-            return Pizza;
+            
         }
-
-        private static APizzaModel AssemblePizzaHawaiian(APizzaModel Pizza)
+        private static void AssemblePizzaHawaiian(APizzaModel Pizza)
         {
             Pizza.PizzaToppings.Add(_sql.getToppings("Pineapple"));
             Pizza.PizzaToppings.Add(_sql.getToppings("Ham"));
             Pizza.PizzaToppings.Add(_sql.getToppings("Mozarella"));
             Pizza.PizzaToppings.Add(_sql.getToppings("Green Olives"));
-            return Pizza;
+            
         }
+        private static void ChooseASize(APizzaModel p)
+        {
+            string SizeSel="";
+            double PriceSel=0;
+
+            
+            System.Console.WriteLine("Choose a Size");
+            System.Console.WriteLine("1 Picola - Small size");
+            System.Console.WriteLine("2 Medio - Medium size");
+            System.Console.WriteLine("3 Familiare - Large size");
+            var opt0 = new String("");
+            opt0 = Console.ReadLine();
+            switch(opt0)
+            {
+                case "1": SizeSel = "Picola";PriceSel=0.00;break; 
+                case "2": SizeSel = "Medio";PriceSel=2.99;break; 
+                case "3": SizeSel = "Familiare";PriceSel=5.00;break; 
+               
+            };
+
+            p.Size = SizeSel;
+            p.PizzaPrice += PriceSel;
+        }
+         private static void ChooseACrust(APizzaModel p)
+        {
+            string CrustSel="";
+            double PriceSel=0;
+
+            System.Console.WriteLine("Choose a Crust");
+            System.Console.WriteLine("1 Regular");
+            System.Console.WriteLine("2 Thin-Flat");
+            System.Console.WriteLine("3 Stuffed");
+            var opt1 = new String("");
+            opt1 = Console.ReadLine();
+            switch (opt1)
+            {
+                case "1": CrustSel = "Regular";PriceSel=0.00;break; 
+                case "2": CrustSel = "Thin-Flat";PriceSel=2.50;break; 
+                case "3": CrustSel = "Stuffed";PriceSel=5.00;break; 
+                
+            };
+           
+            p.Crust = CrustSel;
+            p.PizzaPrice += PriceSel;
+        }
+
+        private static void CalculatePrice(List<Order> p)
+        {
+            p.ForEach((o)=>{
+                for ( var i=0; i < o.Pizzas.Count; i++ )
+                {
+                  o.Pizzas[i].PizzaPrice += GetToppingsInfo(o.Pizzas[i]);
+                }
+                Console.ReadKey();
+            });
+            
+        }
+
     }
 }

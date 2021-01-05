@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using PizzaWorldPro.Domain.Abstracts;
 using PizzaWorldPro.Domain.Models;
 using PizzaWorldPro.Storing;
 
@@ -64,6 +65,23 @@ namespace PizzaWorldPro.Client
         {
             var t = _context.Toppings.FirstOrDefault(t => t.ItemName == name);
             return t;
+        }
+        public AItemModel getCrust(string name)
+        {
+            var c = _context.Crusts.FirstOrDefault(c => c.ItemName == name);
+            return c;
+        }
+        public AItemModel getSize(string name)
+        {
+            var z = _context.Sizes.FirstOrDefault(z => z.ItemName == name);
+            return z;
+        }
+
+        public List<Order> getOrdersByStore(string n)
+        {
+            var s = _context.Stores.FirstOrDefault(s => s.Name == n);
+            var o = _context.Orders.ToList();
+            return o;
         }
     }
 }

@@ -10,8 +10,8 @@ using PizzaWorldPro.Storing;
 namespace PizzaWorldPro.Storing.Migrations
 {
     [DbContext(typeof(PizzaWorldProContext))]
-    [Migration("20210103215058_firstMigrationTest")]
-    partial class firstMigrationTest
+    [Migration("20210104203731_firstMigration")]
+    partial class firstMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -117,6 +117,12 @@ namespace PizzaWorldPro.Storing.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint")
                         .UseIdentityColumn();
+
+                    b.Property<double>("OrderPrice")
+                        .HasColumnType("float");
+
+                    b.Property<DateTime>("OrderTime")
+                        .HasColumnType("datetime2");
 
                     b.Property<long?>("StoreEntityId")
                         .HasColumnType("bigint");

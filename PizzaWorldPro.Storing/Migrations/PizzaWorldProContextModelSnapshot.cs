@@ -116,6 +116,12 @@ namespace PizzaWorldPro.Storing.Migrations
                         .HasColumnType("bigint")
                         .UseIdentityColumn();
 
+                    b.Property<double>("OrderPrice")
+                        .HasColumnType("float");
+
+                    b.Property<DateTime>("OrderTime")
+                        .HasColumnType("datetime2");
+
                     b.Property<long?>("StoreEntityId")
                         .HasColumnType("bigint");
 
