@@ -242,6 +242,7 @@ namespace PizzaWorldPro.Client
            {
                TotalSales += o.OrderPrice; 
                System.Console.WriteLine("Order Price: {0}",o.OrderPrice.ToString("c"));
+               
             });
             Console.WriteLine("The Store {0} TOTAL: {1}",s.Name,TotalSales.ToString("c"));
             Console.Write("Press a Key to Continue.....");
